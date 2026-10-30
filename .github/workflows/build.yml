@@ -21,13 +21,16 @@ jobs:
 
       - name: Set up build environment
         run: |
-          sudo apt update
-          DEBIAN_FRONTEND=noninteractive sudo apt install -yq \
-            p7zip-full jq attr ccache clang ffmpeg golang \
-            libbrotli-dev libgtest-dev libprotobuf-dev libunwind-dev libpcre2-dev \
-            libzstd-dev linux-modules-extra-$(uname -r) lld protobuf-compiler webp \
-            curl xxd patchelf flex bison libarchive-tools build-essential pcre2-utils
-          sudo modprobe erofs f2fs
+          set -eux
+
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            build-essential bc curl ca-certificates git zip unzip xz-utils p7zip-full \
+            bison flex libelf-dev libssl-dev python3 python3-distutils pkg-config \
+            cpio jq patchelf xxd ccache clang lld \
+            libarchive-tools libbrotli-dev libgtest-dev libprotobuf-dev \
+            libunwind-dev libpcre2-dev libzstd-dev protobuf-compiler
+
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
@@ -35,7 +38,7 @@ jobs:
         run: |
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /opt/ghc
-          sudo apt clean
+          sudo apt-get clean
 
       - name: Make build script executable
         run: chmod +x build.sh
@@ -49,3 +52,4 @@ jobs:
         with:
           name: kernel-${{ matrix.target }}
           path: build/out/${{ matrix.target }}/*.zip
+          
