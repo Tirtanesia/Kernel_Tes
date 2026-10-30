@@ -1,4 +1,4 @@
-name: Build BenlyROMkernel_exynos990
+name: Build Lotus
 
 on:
   workflow_dispatch:
